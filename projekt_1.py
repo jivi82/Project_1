@@ -6,30 +6,6 @@ email: jivi@centrum.cz
 discord: jirkav._
 """
 
-# Uložená správná jména a hesla
-users = {
-    "bob":"123",
-    "ann":"pass123",
-    "mike":"password123",
-    "liz":"pass123"
-}
-
-oddelovac = "-" * 40
-
-# Získání uživatelského jména a hesla od uživatele
-uzivatel = input("username: ")
-heslo = input("password: ")
-
-# Ověření přihlášení uživatele
-if uzivatel in users and heslo == users[uzivatel]:
-    print(oddelovac)
-    print("Welcome to the app,", uzivatel)
-    print("We have 3 texts to be analyzed.", oddelovac, sep="\n")
-else:
-    print("Unregistered user, terminating the program...")
-    quit()
-
-
 # texty
     
 TEXTS = ['''
@@ -60,29 +36,42 @@ in modern oceans. Other fish such as paddlefish,
 garpike and stingray are also present.'''
 ]
 
-# Rozdělení textů do jednotlivých listů
-text_1 = [TEXTS[0]]
-text_2 = [TEXTS[1]]
-text_3 = [TEXTS[2]]
+# Uložená správná jména a hesla
+users = {
+    "bob":"123",
+    "ann":"pass123",
+    "mike":"password123",
+    "liz":"pass123"
+}
 
-# Výběr mezi 3 texty
-vyber_textu = input("Enter a number btw. 1 and 3 to select: ")
-if not vyber_textu.isdigit():
-    print("It's not a number, terminating the program...")
-    quit()
-elif int(vyber_textu) != 1 and int(vyber_textu) != 2 and int(vyber_textu) != 3:
-    print("It's not a number from range, terminating the program...")
-    quit()
-else:
+oddelovac = "-" * 40
+
+# Získání uživatelského jména a hesla od uživatele
+uzivatel = input("username: ")
+heslo = input("password: ")
+
+# Ověření přihlášení uživatele
+if uzivatel in users and heslo == users[uzivatel]:
     print(oddelovac)
-
-# Práce s textem
-if vyber_textu == "1":
-    vybrany_text = text_1[0]
-elif vyber_textu == "2":
-    vybrany_text = text_2[0]
+    print("Welcome to the app,", uzivatel)
+    print(f"We have {len(TEXTS)} texts to be analyzed.", oddelovac, sep="\n")
 else:
-    vybrany_text = text_3[0]
+    print("Unregistered user, terminating the program...")
+    quit()
+
+# Výběr mezi danými texty a chybové hlášky v případě nesprávného výběru
+vyber = input(f"Enter a number btw. 1 and {len(TEXTS)} to select: ")
+for index,text in enumerate(TEXTS):
+    if str(vyber).isalpha():
+        print("It's not a number, terminating the program...")
+        quit()
+    elif int(vyber) < 1 or int(vyber) > len(TEXTS):
+        print("It's not a number from range, terminating the program...")
+        quit()
+
+print(oddelovac)
+vyber = int(vyber)
+vybrany_text = TEXTS[vyber-1]
 
 # Rozdělení textu na slova
 slova = vybrany_text.split()
@@ -91,67 +80,45 @@ slova = vybrany_text.split()
 pocet_slov = len(slova)
 print(f"There are {pocet_slov} words in the selected text.")
 
-# Počet slov s prvním velkým písmenem
+# Různé typy slov(a čísel) a počet výskytů
 prvni_velke = 0
+cele_velke = 0
+male_slovo = 0
+cislice = 0
+soucet = 0
 for slovo in slova:
     if slovo.istitle():
         prvni_velke += 1
-print(f"There are {prvni_velke} titlecase words.")
-
-# Počet slov CELE VELKÉ
-cele_velke = 0
-for slovo in slova:
-    if slovo.isupper() and slovo.isalpha():
+    elif slovo.isupper() and slovo.isalpha():
         cele_velke +=1
-print(f"There are {cele_velke} uppercase words.")
-
-# Počet slov s malými písmeny
-male_slovo = 0
-for slovo in slova:
-    if slovo.islower():
+    elif slovo.islower():
         male_slovo +=1
-print(f"There are {male_slovo} lowercase words.")
-
-# Počet číslic
-cislice = 0
-for slovo in slova:
-    if slovo.isnumeric():
+    elif slovo.isnumeric():
         cislice += 1
-print(f"Theer are {cislice} numeric strings.")
-
-# Součet čísel v textu
-soucet = 0
-for slovo in slova:
-    if slovo.isnumeric():
         cislo = int(slovo)
         soucet += cislo
+    
+print(f"There are {prvni_velke} titlecase words.")
+print(f"There are {cele_velke} uppercase words.")
+print(f"There are {male_slovo} lowercase words.")
+print(f"Theer are {cislice} numeric strings.")
 print(f"The sum of all the numbers {soucet}")
+
 print(oddelovac)
 
 # Výpočet délky slov a jejich počet
 slova_delka = {}
 for slovo in slova:
-    delka = len(slovo)
+    ciste_slovo = slovo.strip(",.")
+    delka = len(ciste_slovo)
     if delka in slova_delka:
         slova_delka[delka] += 1
     else:
         slova_delka[delka] = 1
 
 # Vytvoření tabulky
-print("LEN| OCCURENCES |NR.")
+print(f"{"LEN":3}|{"OCCURENCES":^17}|{"NR.":>}")
 print(oddelovac)
 for delka, pocet in sorted(slova_delka.items()):
     stars = "*" * pocet
-    print(f"{delka:3}|{stars:<12}|{pocet:2}")
-
-
-
-
-
-
-
-    
-
-
-
- 
+    print(f"{delka:3}|{stars:<17}|{pocet:<}")
